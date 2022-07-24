@@ -1,29 +1,32 @@
-use std::thread;
 use std::thread::sleep;
+use std::thread;
 use std::time::Duration;
+#[tokio::main]
+async fn main() {
+    println!("Hello before reading file");
 
-fn main() {
-    println!("Hello before reading file!");
-    let handle1 = thread::spawn(|| {
-        let file1_contents = read_from_file1();
-        println!("{:?}", file1_contents);
+    let h1 = tokio::spawn(async {
+        let _file1_contents = read_from_file1();
     });
-    let handle2 = thread::spawn(|| {
-        let file2_contents = read_from_file2();
-        println!("{:?}", file2_contents);
+
+    let h2 = tokio::spawn(async {
+        let _file2_contents = read_from_file2();
     });
-    handle1.join().unwrap();
-    handle2.join().unwrap();
+
+    let _ = tokio::join!(h1, h2);
 }
 
-// function that simulates reading from a file
+
 fn read_from_file1() -> String {
-    sleep(Duration::new(4, 0));
-    String::from("Hello, there from file 1")
+    sleep(Duration::new(4,0));
+    println!("{:?}", "Processing File 1");
+    String::from("Hello from file 1")
 }
 
-// function that simulates reading from a file
+
+
 fn read_from_file2() -> String {
-    sleep(Duration::new(2, 0));
-    String::from("Hello, there from file 2")
+    sleep(Duration::new(2,0));
+    println!("{:?}", "Processing File 2");
+    String::from("Hello from file 2")
 }
