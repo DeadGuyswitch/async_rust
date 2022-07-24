@@ -1,26 +1,29 @@
+use std::thread;
 use std::thread::sleep;
 use std::time::Duration;
 
 fn main() {
-   
-    println!("Before reading the file");
-   
-   let file1_contents = read_from_file1();
-   println!("{:?}", file1_contents);
-   println!("Hello after reading file1");
-
-   let file2_contents = read_from_file2();
-   println!("{:?}", file2_contents);
-   println!("Hello after reading file2");
+    println!("Hello before reading file!");
+    let handle1 = thread::spawn(|| {
+        let file1_contents = read_from_file1();
+        println!("{:?}", file1_contents);
+    });
+    let handle2 = thread::spawn(|| {
+        let file2_contents = read_from_file2();
+        println!("{:?}", file2_contents);
+    });
+    handle1.join().unwrap();
+    handle2.join().unwrap();
 }
 
+// function that simulates reading from a file
 fn read_from_file1() -> String {
-    sleep(Duration::new(4,0));
-    String::from("Hello World from file 1")
+    sleep(Duration::new(4, 0));
+    String::from("Hello, there from file 1")
 }
 
+// function that simulates reading from a file
 fn read_from_file2() -> String {
-    sleep(Duration::new(2,0));
-    String::from("Hello World from file 2")
+    sleep(Duration::new(2, 0));
+    String::from("Hello, there from file 2")
 }
-
