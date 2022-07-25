@@ -1,6 +1,8 @@
 use std::thread::sleep;
 use std::thread;
 use std::time::Duration;
+use std::future::Future;
+
 #[tokio::main]
 async fn main() {
     println!("Hello before reading file");
@@ -17,16 +19,17 @@ async fn main() {
 }
 
 
-fn read_from_file1() -> String {
-    sleep(Duration::new(4,0));
+fn read_from_file1() -> impl Future<Output=String> {
+   async {sleep(Duration::new(4,0));
     println!("{:?}", "Processing File 1");
-    String::from("Hello from file 1")
+    String::from("Hello from file 1")} 
 }
 
 
-
-fn read_from_file2() -> String {
-    sleep(Duration::new(2,0));
-    println!("{:?}", "Processing File 2");
-    String::from("Hello from file 2")
+fn read_from_file2() -> impl Future<Output=String> {
+    async {
+        sleep(Duration::new(2,0));
+        println!("{:?}", "Processing File 2");
+        String::from("Hello from file 2")
+    }
 }
